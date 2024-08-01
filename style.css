@@ -193,3 +193,112 @@ canvas
 {
     margin: 0 auto;
 }
+
+.button {
+    background: transparent;
+    /* Orange border */
+    /* Orange text */
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #ff5e00; /* Orange glow */
+}
+
+.button.selected
+{
+    background: #ff5e00;
+}
+
+/* Adjust the slider input for better contrast */
+.slider {
+    -webkit-appearance: none;
+    width: 150px;
+    height: 6px;
+    border-radius: 5px;
+    background: #000000; /* Black background */
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    margin-right: 10px;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #ff5e00; /* Orange thumb */
+    cursor: pointer;
+}
+
+#wallType {
+    background-color: #000428; /* Dark blue background */
+    color: white; /* White text */
+    border: 2px solid white; /* White border */
+    border-radius: 5px;
+    padding: 5px;
+}
+#wallType {
+    background-color: #000428; /* Dark blue background */
+    color: white; /* White text */
+    border: 2px solid white; /* White border */
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center; /* Center text */
+    text-align-last: center; /* Center text for dropdowns in some browsers */
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 150px;
+    height: 6px;
+    border-radius: 5px;
+    background: #000000; /* Black background */
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    margin-right: 10px;
+}
+
+input[type="range"]:hover {
+    opacity: 1;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #ff5e00; /* Orange thumb */
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #ff5e00; /* Orange thumb */
+    cursor: pointer;
+}
+
+.range-label {
+    margin-right: 10px;
+    text-align: center; /* Center text */
+    display: inline-block;
+    width: 100px; /* Adjust width as needed */
+}

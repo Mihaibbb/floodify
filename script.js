@@ -450,72 +450,78 @@ function simulate()
 
 // -----------------------------------------------------------------------------------
 
-function draw() 
-{
-	c.clearRect(0, 0, canvas.width, canvas.height);
+function draw() {
+    c.clearRect(0, 0, canvas.width, canvas.height);
 
-	// particles
-	
-	let nr = 0;
-	for (i = 0; i < numParticles; i++) {
-		c.fillStyle = "#1a40e9";
-		let px = drawOrig.x + particles.pos[nr] * drawScale;
-		let py = drawOrig.y - particles.pos[nr + 1] * drawScale;
-		
-		nr += 2;
+    // particles
+    
+    let nr = 0;
+    for (i = 0; i < numParticles; i++) {
+        c.fillStyle = "#1a40e9";
+        let px = drawOrig.x + particles.pos[nr] * drawScale;
+        let py = drawOrig.y - particles.pos[nr + 1] * drawScale;
+        
+        nr += 2;
 
-		c.beginPath();			
-		c.arc(px, py, particleRadius * drawScale, 0, Math.PI*2, true); 
-		c.closePath();
-		c.fill();
-	}
-	
-	// boundaries
-	
-	for (i = 0; i < boundaries.length; i++) {
-		let b = boundaries[i];
-		let left = drawOrig.x + b.left * drawScale;
-		let width = (b.right - b.left) * drawScale;
-		let top = drawOrig.y - b.top * drawScale;
-		let height = (b.top - b.bottom) * drawScale; 
-		
-		c.beginPath();
-		if (b.selected) {
-			c.strokeStyle = "#000000";
+        c.beginPath();            
+        c.arc(px, py, particleRadius * drawScale, 0, Math.PI*2, true); 
+        c.closePath();
+        c.fill();
+    }
+    
+    // boundaries
+    
+    for (i = 0; i < boundaries.length; i++) {
+        let b = boundaries[i];
+        let left = drawOrig.x + b.left * drawScale;
+        let width = (b.right - b.left) * drawScale;
+        let top = drawOrig.y - b.top * drawScale;
+        let height = (b.top - b.bottom) * drawScale; 
+        
+        c.beginPath();
+        if (b.selected) {
+            c.strokeStyle = "#000000";
 			c.fillStyle = "#54b5e698";
-		} else {
-			c.strokeStyle = "#000000";
-			c.fillStyle = "#1173a36d";
-		}
-		c.fillRect(left, top, width, height);
-		c.stroke();		
-	}
+        } else {
+            c.strokeStyle = "#000000";
+            c.fillStyle = "#1173a36d";
+        }
+        c.fillRect(left, top, width, height);
+        c.stroke();        
+    }
 
-	// final walls
-	
-	for (i = 0; i < finalWalls.length; i++) {
-		let b = finalWalls[i];
-		let left = drawOrig.x + b.left * drawScale;
-		let width = (b.right - b.left) * drawScale;
-		let top = drawOrig.y - b.top * drawScale;
-		let height = (b.top - b.bottom) * drawScale; 
-		
-		c.beginPath();
-		if (b.selected) {
-			c.strokeStyle = "#000000";
-			c.fillStyle = "#FF000077";
-		} else {
-			c.strokeStyle = "#000000";
-			c.fillStyle = "#FF000088";
-		}
-		c.fillRect(left, top, width, height);
-		c.stroke();		
-	}
-	
-	c.beginPath();
-	c.moveTo(0, drawOrig.y); c.lineTo(canvas.width, drawOrig.y);
-	c.stroke();
-}	
+    // final walls
+    
+    for (i = 0; i < finalWalls.length; i++) {
+        let b = finalWalls[i];
+        let left = drawOrig.x + b.left * drawScale;
+        let width = (b.right - b.left) * drawScale;
+        let top = drawOrig.y - b.top * drawScale;
+        let height = (b.top - b.bottom) * drawScale; 
+        
+        c.beginPath();
+        if (b.selected) {
+            c.strokeStyle = "#000000";
+            c.fillStyle = "#FF000077";
+        } else {
+            c.strokeStyle = "#000000";
+            c.fillStyle = "#FF000088";
+        }
+        c.fillRect(left, top, width, height);
+        c.stroke();
+        
+        // Draw the number inside the final wall
+        c.fillStyle = "#FFFFFF";
+        c.font = "16px Poppins"; // Adjust font size and family as needed
+        c.textAlign = "center";
+        c.textBaseline = "middle";
+        c.fillText(b.number, left + width / 2, top + height / 2);
+    }
+    
+    c.beginPath();
+    c.moveTo(0, drawOrig.y); c.lineTo(canvas.width, drawOrig.y);
+    c.stroke();
+}
 	
 // -----------------------------------------------------------------------------------
 	
@@ -671,24 +677,26 @@ function addParticle(x, y) {
 }
 
 function createWall(x1, y1, x2, y2) {
-	if (Math.abs(x1 - x2) <= 0.01 || Math.abs(y1 - y2) <= 0.01) return; 
-	const wallType = document.getElementById("wallType").value;
-	const wall = {
-		left: Math.min(x1, x2),
-		right: Math.max(x1, x2),
-		bottom: Math.min(y1, y2),
-		top: Math.max(y1, y2),
-		selected: false
-	};
+    if (Math.abs(x1 - x2) <= 0.01 || Math.abs(y1 - y2) <= 0.01) return; 
+    const wallType = document.getElementById("wallType").value;
+    const wall = {
+        left: Math.min(x1, x2),
+        right: Math.max(x1, x2),
+        bottom: Math.min(y1, y2),
+        top: Math.max(y1, y2),
+        selected: false,
+        number: null // Add a number property
+    };
 
-	if (wallType === "final") {
-		finalWalls.push(wall);
-	} else {
-		boundaries.push(wall);
-	}
-	
-	boundariesSelected = [];
-	draw();
+    if (wallType === "final") {
+        wall.number = finalWalls.length + 1; // Assign a number
+        finalWalls.push(wall);
+    } else {
+        boundaries.push(wall);
+    }
+    
+    boundariesSelected = [];
+    draw();
 }
 
 function drawSelection(x1, y1, x2, y2) {
