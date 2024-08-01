@@ -169,27 +169,6 @@ function solveBoundaries() {
 				particles.pos[2 * i + 1] += dy;
 		}		
 	}
-
-	// Adjust particles' positions based on the boundaries
-	for (i = 0; i < numParticles; i++) {
-		let px = particles.pos[2 * i];
-		let py = particles.pos[2 * i + 1];
-
-		for (j = 0; j < boundaries.length; j++) {
-			let b = boundaries[j];
-			if (px >= b.left && px <= b.right && py >= b.bottom && py <= b.top) {
-				if (px < (b.left + b.right) * 0.5) 
-					particles.pos[2 * i] = b.left - particleRadius;
-				else
-					particles.pos[2 * i] = b.right + particleRadius;
-
-				if (py < (b.bottom + b.top) * 0.5)
-					particles.pos[2 * i + 1] = b.bottom - particleRadius;
-				else
-					particles.pos[2 * i + 1] = b.top + particleRadius;
-			}
-		}
-	}
 }
 
 function checkFinalWalls() {
@@ -471,81 +450,73 @@ function simulate()
 
 // -----------------------------------------------------------------------------------
 
-function draw() {
-    c.clearRect(0, 0, canvas.width, canvas.height);
+function draw() 
+{
+	c.clearRect(0, 0, canvas.width, canvas.height);
 
-    // particles
-    
-    let nr = 0;
-    for (i = 0; i < numParticles; i++) {
-        c.fillStyle = "#1a40e9";
-        let px = drawOrig.x + particles.pos[nr] * drawScale;
-        let py = drawOrig.y - particles.pos[nr + 1] * drawScale;
-        
-        nr += 2;
+	// particles
+	
+	let nr = 0;
+	for (i = 0; i < numParticles; i++) {
+		c.fillStyle = "#1a40e9";
+		let px = drawOrig.x + particles.pos[nr] * drawScale;
+		let py = drawOrig.y - particles.pos[nr + 1] * drawScale;
+		
+		nr += 2;
 
-        c.beginPath();
-        c.arc(px, py, particleRadius * drawScale, 0, Math.PI*2, true); 
-        c.closePath();
-        c.shadowColor = "rgba(0, 0, 0, 0.5)";
-        c.shadowBlur = 10;
-        c.fill();
-        c.shadowBlur = 0; // Disable the shadow after drawing
-    }
-    
-    // boundaries
-    
-    for (i = 0; i < boundaries.length; i++) {
-        let b = boundaries[i];
-        let left = drawOrig.x + b.left * drawScale;
-        let width = (b.right - b.left) * drawScale;
-        let top = drawOrig.y - b.top * drawScale;
-        let height = (b.top - b.bottom) * drawScale; 
-        
-        c.beginPath();
-        if (b.selected) {
-            c.strokeStyle = "#000000";
-            c.fillStyle = "#FF000077";
-        } else {
-            c.strokeStyle = "#000000";
-            c.fillStyle = "#1173a36d";
-        }
-        c.shadowColor = "rgba(0, 0, 0, 0.5)";
-        c.shadowBlur = 10;
-        c.fillRect(left, top, width, height);
-        c.stroke();
-        c.shadowBlur = 0; // Disable the shadow after drawing
-    }
+		c.beginPath();			
+		c.arc(px, py, particleRadius * drawScale, 0, Math.PI*2, true); 
+		c.closePath();
+		c.fill();
+	}
+	
+	// boundaries
+	
+	for (i = 0; i < boundaries.length; i++) {
+		let b = boundaries[i];
+		let left = drawOrig.x + b.left * drawScale;
+		let width = (b.right - b.left) * drawScale;
+		let top = drawOrig.y - b.top * drawScale;
+		let height = (b.top - b.bottom) * drawScale; 
+		
+		c.beginPath();
+		if (b.selected) {
+			c.strokeStyle = "#000000";
+			c.fillStyle = "#54b5e698";
+		} else {
+			c.strokeStyle = "#000000";
+			c.fillStyle = "#1173a36d";
+		}
+		c.fillRect(left, top, width, height);
+		c.stroke();		
+	}
 
-    // final walls
-    
-    for (i = 0; i < finalWalls.length; i++) {
-        let b = finalWalls[i];
-        let left = drawOrig.x + b.left * drawScale;
-        let width = (b.right - b.left) * drawScale;
-        let top = drawOrig.y - b.top * drawScale;
-        let height = (b.top - b.bottom) * drawScale; 
-        
-        c.beginPath();
-        if (b.selected) {
-            c.strokeStyle = "#000000";
-            c.fillStyle = "#FF000077"; 
-        } else {
-            c.strokeStyle = "#000000";
-            c.fillStyle = "#FF000088";
-        }
-        c.shadowColor = "rgba(0, 0, 0, 0.5)";
-        c.shadowBlur = 10;
-        c.fillRect(left, top, width, height);
-        c.stroke();
-        c.shadowBlur = 0; // Disable the shadow after drawing
-    }
-    
-    c.beginPath();
-    c.moveTo(0, drawOrig.y); c.lineTo(canvas.width, drawOrig.y);
-    c.stroke();
-}
-
+	// final walls
+	
+	for (i = 0; i < finalWalls.length; i++) {
+		let b = finalWalls[i];
+		let left = drawOrig.x + b.left * drawScale;
+		let width = (b.right - b.left) * drawScale;
+		let top = drawOrig.y - b.top * drawScale;
+		let height = (b.top - b.bottom) * drawScale; 
+		
+		c.beginPath();
+		if (b.selected) {
+			c.strokeStyle = "#000000";
+			c.fillStyle = "#FF000077";
+		} else {
+			c.strokeStyle = "#000000";
+			c.fillStyle = "#FF000088";
+		}
+		c.fillRect(left, top, width, height);
+		c.stroke();		
+	}
+	
+	c.beginPath();
+	c.moveTo(0, drawOrig.y); c.lineTo(canvas.width, drawOrig.y);
+	c.stroke();
+}	
+	
 // -----------------------------------------------------------------------------------
 	
 let timeFrames = 0;
@@ -597,7 +568,7 @@ let simulationStarted = false;
 
 canvas.addEventListener("mousedown", function(event) {
 	updateMousePosition(event);
-	if (!simulationStarted || !simulationRunning || event.shiftKey) { // Shift to create walls before simulation starts or during simulation
+	if (!simulationStarted || !simulationRunning || event.shiftKey) { // Hold Shift to create walls before simulation starts
 		isCreatingWall = true;
 		selectStartX = mouseX;
 		selectStartY = mouseY;
@@ -635,12 +606,9 @@ canvas.addEventListener("mousemove", function(event) {
 canvas.addEventListener("click", function(event) {
 	const currX = (event.clientX - canvas.getBoundingClientRect().left - drawOrig.x) / drawScale;
 	const currY = (drawOrig.y - (event.clientY - canvas.getBoundingClientRect().top)) / drawScale;
-  
+    
 	boundariesSelected = boundaries.filter((currBoundary) => {
-		return isInsideBoundary(currX, currBoundary.right, currBoundary) &&
-			   isInsideBoundary(currX, currBoundary.left, currBoundary) &&
-			   isInsideBoundary(currY, currBoundary.top, currBoundary) &&
-			   isInsideBoundary(currY, currBoundary.bottom, currBoundary);
+		return isInsideBoundary(currX, currY, currBoundary);
 	});
 
 	boundariesSelected = boundariesSelected.concat(finalWalls.filter((currBoundary) => {
